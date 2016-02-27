@@ -2,24 +2,27 @@ module Main where
 
 import Html exposing(..)
 import Html.Events exposing (onClick)
+import Random exposing (..)
 
 
 --MODEL
 
 type alias Model =
-  { score: Int }
-
-
-type alias Math =
   { numA: Int
   , numB: Int
   , operator: String
+  , score: Int
   }
+
 
 
 initialModel : Model
 initialModel =
-  { score = 0 }
+  { numA = 0
+  , numB = 0
+  , operator= "*"
+  , score = 0
+  }
   --let
   --  emptyModel =
   --    { score = 0 }
@@ -37,52 +40,48 @@ update action model =
     NoOp ->
       model
     Check ->
-      { model | score = model.score + 1 }
+      let
+        seed0 = initialSeed 31415
+        (num1, seed1) = generate (int 0 10) seed0
+        (num2, _) = generate (int 0 10) seed1
+      in
+        { model | score = model.score + 1
+                , numA = num1
+                , numB = num2
+        }
 
 
 
 --VIEW
 
-view : Math -> Model -> Html
-view numbers model =
+view : Model -> Html
+view model =
   div []
     [ div
         []
-        [ text (toString numbers.numA)
-        , text (numbers.operator)
-        , text (toString numbers.numB)
+        [ text (toString model.numA)
+        , text (model.operator)
+        , text (toString model.numB)
         ]
     , div
         []
         [ text (toString model.score) ]
     , button
-        [ onClick inbox1.address Check ]
+        [ onClick inbox.address Check ]
         [ text "Submit" ]
     ]
 
 
 --SIGNALS
 
-inbox1 : Signal.Mailbox Action
-inbox1 =
+inbox : Signal.Mailbox Action
+inbox =
   Signal.mailbox NoOp
 
 
 actions : Signal Action
 actions =
-  inbox1.signal
-
-
-inbox2 : Signal.Mailbox Math
-inbox2 =
-  Signal.mailbox  { numA = 0
-                  , numB = 0
-                  , operator = "*"
-                  }
-
-numbers : Signal Math
-numbers =
-  inbox2.signal
+  inbox.signal
 
 
 --PORTS
@@ -91,9 +90,9 @@ numbers =
 
 --port incoming : Maybe Model
 
---port outgoing : Signal Model
---port outgoing =
---  model
+port outgoing : Signal Model
+port outgoing =
+  model
 
 
 --WIRING
@@ -105,7 +104,7 @@ model =
 
 main : Signal Html
 main =
-  Signal.map2 view numbers model
+  Signal.map view model
 
 
 
