@@ -15,15 +15,16 @@
 </body>
 
 <script type="text/javascript">
-  var elmModel = localStorage.getItem('math-sessions')
-  var startingModel = elmModel ? JSON.parse(elmModel) : null
+  // var elmModel = localStorage.getItem('math-sessions')
+  // var startingModel = elmModel ? JSON.parse(elmModel) : null
 
   var mathDiv = document.getElementById('elm-math')
-  var mathTrainer = Elm.embed(Elm.Main, mathDiv, {incoming: startingModel})
+  var mathTrainer = Elm.embed(Elm.Main, mathDiv)
+    // , {incoming: startingModel})
 
-  mathTrainer.ports.outgoing.subscribe(function(model) {
-    localStorage.setItem('math-sessions', JSON.stringify(model))
-  })
+  // mathTrainer.ports.outgoing.subscribe(function(model) {
+    // localStorage.setItem('math-sessions', JSON.stringify(model))
+  // })
 
 </script>
 

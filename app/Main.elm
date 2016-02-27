@@ -1,6 +1,7 @@
 module Main where
 
 import Html exposing(..)
+import Html.Events exposing (onClick)
 
 
 --MODEL
@@ -18,11 +19,12 @@ type alias Math =
 
 initialModel : Model
 initialModel =
-  let
-    emptyModel =
-      { score = 0 }
-  in
-    Maybe.withDefault emptyModel incoming
+  { score = 0 }
+  --let
+  --  emptyModel =
+  --    { score = 0 }
+  --in
+  --  Maybe.withDefault emptyModel incoming
 
 
 --UPDATE
@@ -53,6 +55,9 @@ view numbers model =
     , div
         []
         [ text (toString model.score) ]
+    , button
+        [ onClick inbox1.address Check ]
+        [ text "Submit" ]
     ]
 
 
@@ -82,11 +87,13 @@ numbers =
 
 --PORTS
 
-port incoming : Maybe Model
+-- there is a bug with incoming data. need to be fixed.
 
-port outgoing : Signal Model
-port outgoing =
-  model
+--port incoming : Maybe Model
+
+--port outgoing : Signal Model
+--port outgoing =
+--  model
 
 
 --WIRING
