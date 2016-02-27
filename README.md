@@ -15,3 +15,5 @@ Instead of score it can be some fun actions: race, dress a charecter, etc.
 
 We can add time as a factor to use a coefficient the score will be calcutated with.
 
+To collaborate: create you branch (under your name or issue name if there is any), pull request, ask someone to review (don't merge yoursef, please).
+
