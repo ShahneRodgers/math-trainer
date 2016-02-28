@@ -2,7 +2,7 @@ module Main where
 
 import Html exposing(..)
 import Html.Events exposing (onClick)
-import Random exposing (..)
+import Random.PCG as Rand
 
 
 --MODEL
@@ -12,6 +12,7 @@ type alias Model =
   , numB: Int
   , operator: String
   , score: Int
+  , seed: Rand.Seed
   }
 
 
@@ -22,6 +23,7 @@ initialModel =
   , numB = 0
   , operator= "*"
   , score = 0
+  , seed = Rand.initialSeed2 12345 67890
   }
   --let
   --  emptyModel =
@@ -41,16 +43,19 @@ update action model =
       model
     Check ->
       let
-        seed0 = initialSeed 31415
-        (num1, seed1) = generate (int 0 10) seed0
-        (num2, _) = generate (int 0 10) seed1
+        (num1, seed1) = Rand.generate generator model.seed
+        (num2, seed2) = Rand.generate generator seed1
       in
         { model | score = model.score + 1
                 , numA = num1
                 , numB = num2
+                , seed = seed2
         }
 
 
+generator : Rand.Generator Int
+generator =
+    Rand.int 1 10
 
 --VIEW
 
@@ -90,9 +95,9 @@ actions =
 
 --port incoming : Maybe Model
 
-port outgoing : Signal Model
-port outgoing =
-  model
+--port outgoing : Signal Model
+--port outgoing =
+--  model
 
 
 --WIRING
