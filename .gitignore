@@ -1,4 +1,4 @@
 node-modules/
 elm-stuff/
 elm.js
-
+!elm-package.json
