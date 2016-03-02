@@ -17,3 +17,21 @@ We can add time as a factor to use a coefficient the score will be calcutated wi
 
 To collaborate: create you branch (under your name or issue name if there is any), pull request, ask someone to review (don't merge yoursef, please).
 
+# Installation
+
+In the directory with the cloned project run the following commands:
+
+```bash
+elm package install
+npm install
+```
+
+# Development
+
+To run the project run
+
+```bash
+npm run dev
+```
+
+and navigate your browser to http://localhost:8080
