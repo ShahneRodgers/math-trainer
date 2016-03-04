@@ -1,0 +1,13 @@
+{
+  "name": "math-trainer",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "webpack-dev-server --hot --inline"
+  },
+  "devDependencies": {
+    "elm-webpack-loader": "^2.0.0",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
+  }
+}
