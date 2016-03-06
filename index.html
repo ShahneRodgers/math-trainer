@@ -1,31 +1,12 @@
-<!DOCTYPE HTML>
+<!doctype html>
 <html>
-
-<head>
-  <meta charset="UTF-8">
-  <title>Math Trainer</title>
-  <script type="text/javascript" src="elm.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="utf-8">
+    <title>Math Trainer</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/elm.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">Elm.fullscreen(Elm.Main)</script>
+  </body>
 </head>
-
-<body>
-
-    <div id="elm-math"></div>
-
-</body>
-
-<script type="text/javascript">
-  // var elmModel = localStorage.getItem('math-sessions')
-  // var startingModel = elmModel ? JSON.parse(elmModel) : null
-
-  var mathDiv = document.getElementById('elm-math')
-  var mathTrainer = Elm.embed(Elm.Main, mathDiv)
-    // , {incoming: startingModel})
-
-  // mathTrainer.ports.outgoing.subscribe(function(model) {
-  //   localStorage.setItem('math-sessions', JSON.stringify(model))
-  // })
-
-</script>
-
-</html>

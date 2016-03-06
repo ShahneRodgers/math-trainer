@@ -3,11 +3,9 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "dev": "webpack-dev-server --hot --inline"
+    "dev": "node ./node_modules/elm-live/bin/elm-live app/Main.elm --output=elm.js --open"
   },
   "devDependencies": {
-    "elm-webpack-loader": "^2.0.0",
-    "webpack": "^1.12.14",
-    "webpack-dev-server": "^1.14.1"
+    "elm-live": "^2.0.4"
   }
 }
