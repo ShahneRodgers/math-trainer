@@ -1,6 +1,7 @@
 module Main where
 
 import Html exposing(..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Random.PCG as Rand
 
@@ -61,19 +62,26 @@ generator =
 
 view : Model -> Html
 view model =
-  div []
+  div
+    [ class "container" ]
     [ div
-        []
+      [ class "row" ]
+      [ div
+        [ class "row" ]
         [ text (toString model.numA)
         , text (model.operator)
         , text (toString model.numB)
         ]
-    , div
-        []
+      , div
+        [ class "row" ]
         [ text (toString model.score) ]
-    , button
-        [ onClick inbox.address Check ]
-        [ text "Submit" ]
+      , div
+        [ class "row" ]
+        [ button
+          [ onClick inbox.address Check, class "button-primary" ]
+          [ text "Submit" ]
+        ]
+      ]
     ]
 
 
