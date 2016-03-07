@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "dev": "node ./node_modules/elm-live/bin/elm-live app/Main.elm --output=elm.js --open"
+    "dev": "elm-live app/Main.elm --output=elm.js --open"
   },
   "devDependencies": {
     "elm-live": "^2.0.4"
