@@ -1,8 +1,9 @@
 module Main where
 
 import Html exposing(..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, targetValue, on)
 import Random.PCG as Rand
+import Time
 
 
 --MODEL
@@ -12,7 +13,7 @@ type alias Model =
   , numB: Int
   , operator: String
   , score: Int
-  , seed: Rand.Seed
+  , answer: String
   }
 
 
@@ -21,9 +22,9 @@ initialModel : Model
 initialModel =
   { numA = 0
   , numB = 0
-  , operator= "*"
+  , operator = "*"
   , score = 0
-  , seed = Rand.initialSeed2 12345 67890
+  , answer = ""
   }
   --let
   --  emptyModel =
@@ -34,28 +35,36 @@ initialModel =
 
 --UPDATE
 
-type Action = NoOp | Check
+type Action = NoOp | Check | Answer String
 
-update : Action -> Model -> Model
-update action model =
+update : (Float, Action) -> Model -> Model
+update (time, action) model =
   case action of
     NoOp ->
       model
+
+    Answer ans ->
+      { model | answer = ans }
+
     Check ->
       let
-        (num1, seed1) = Rand.generate generator model.seed
+        seedM = Rand.initialSeed2 (round time) 12345
+        (num1, seed1) = Rand.generate generator seedM
         (num2, seed2) = Rand.generate generator seed1
       in
         { model | score = model.score + 1
                 , numA = num1
                 , numB = num2
-                , seed = seed2
         }
 
 
 generator : Rand.Generator Int
 generator =
     Rand.int 1 10
+
+getAnswer ans =
+  ans
+
 
 --VIEW
 
@@ -67,13 +76,24 @@ view model =
         [ text (toString model.numA)
         , text (model.operator)
         , text (toString model.numB)
+        , text " = "
+        , input
+          [ on "input" targetValue (Signal.message answer.address) ]
+          [ ]
+        , button
+          [ onClick inbox.address Check ]
+          [ text "Submit" ]
         ]
     , div
         []
-        [ text (toString model.score) ]
-    , button
-        [ onClick inbox.address Check ]
-        [ text "Submit" ]
+        [ text "Score: "
+        , text (toString model.score)
+        ]
+    , div
+        []
+        [ text "Answer: "
+        , text model.answer
+        ]
     ]
 
 
@@ -87,6 +107,22 @@ inbox =
 actions : Signal Action
 actions =
   inbox.signal
+
+
+
+answer : Signal.Mailbox String
+answer =
+  Signal.mailbox ""
+
+answerS : Signal String
+answerS =
+  answer.signal
+
+combined =
+  Signal.mergeMany
+    [ actions
+    , Signal.map (\ans -> Answer ans) answerS
+    ]
 
 
 --PORTS
@@ -104,7 +140,7 @@ actions =
 
 model : Signal Model
 model =
-  Signal.foldp update initialModel actions
+  Signal.foldp update initialModel (Time.timestamp actions)
 
 
 main : Signal Html
