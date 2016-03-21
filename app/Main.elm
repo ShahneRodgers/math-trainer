@@ -4,6 +4,7 @@ import Html exposing(..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Random.PCG as Rand
+import Time
 
 
 --MODEL
@@ -13,7 +14,6 @@ type alias Model =
   , numB: Int
   , operator: String
   , score: Int
-  , seed: Rand.Seed
   }
 
 
@@ -24,7 +24,6 @@ initialModel =
   , numB = 0
   , operator= "*"
   , score = 0
-  , seed = Rand.initialSeed2 12345 67890
   }
   --let
   --  emptyModel =
@@ -37,20 +36,20 @@ initialModel =
 
 type Action = NoOp | Check
 
-update : Action -> Model -> Model
-update action model =
+update : (Float, Action) -> Model -> Model
+update (time, action) model =
   case action of
     NoOp ->
       model
     Check ->
       let
-        (num1, seed1) = Rand.generate generator model.seed
-        (num2, seed2) = Rand.generate generator seed1
+        initSeed = Rand.initialSeed2 (round time) 12345
+        (num1, nextSeed) = Rand.generate generator initSeed
+        (num2, _) = Rand.generate generator nextSeed
       in
         { model | score = model.score + 1
                 , numA = num1
                 , numB = num2
-                , seed = seed2
         }
 
 
@@ -112,12 +111,18 @@ actions =
 
 model : Signal Model
 model =
-  Signal.foldp update initialModel actions
+  Signal.foldp update initialModel (Time.timestamp actions)
 
 
 main : Signal Html
 main =
   Signal.map view model
+
+
+
+
+
+
 
 
 
