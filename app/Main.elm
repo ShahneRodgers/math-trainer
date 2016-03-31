@@ -12,8 +12,6 @@ type alias Model =
   { numA: Int
   , numB: Int
   , operator: String
-  , score: Int
-  , answer: String
   }
 
 
@@ -23,8 +21,6 @@ initialModel =
   { numA = 0
   , numB = 0
   , operator = "*"
-  , score = 0
-  , answer = ""
   }
   --let
   --  emptyModel =
@@ -35,35 +31,30 @@ initialModel =
 
 --UPDATE
 
-type Action = NoOp | Check | Answer String
+type Action = Check String
 
 update : (Float, Action) -> Model -> Model
 update (time, action) model =
   case action of
-    NoOp ->
-      model
-
-    Answer ans ->
-      { model | answer = ans }
-
-    Check ->
+    Check answerU ->
       let
         seedM = Rand.initialSeed2 (round time) 12345
         (num1, seed1) = Rand.generate generator seedM
         (num2, seed2) = Rand.generate generator seed1
+
+        answerC = model.numA * model.numB
       in
-        { model | score = model.score + 1
-                , numA = num1
-                , numB = num2
-        }
+        if (toString answerC) == answerU then --to integer
+          { model | numA = num1
+                  , numB = num2
+          }
+        else
+          model
 
 
 generator : Rand.Generator Int
 generator =
     Rand.int 1 10
-
-getAnswer ans =
-  ans
 
 
 --VIEW
@@ -78,51 +69,32 @@ view model =
         , text (toString model.numB)
         , text " = "
         , input
-          [ on "input" targetValue (Signal.message answer.address) ]
+          [ on "input" targetValue (\str -> Signal.message inputBox.address (Check str)) ]
           [ ]
         , button
-          [ onClick inbox.address Check ]
+          [ onClick clickBox.address "click"]
           [ text "Submit" ]
-        ]
-    , div
-        []
-        [ text "Score: "
-        , text (toString model.score)
-        ]
-    , div
-        []
-        [ text "Answer: "
-        , text model.answer
         ]
     ]
 
 
 --SIGNALS
 
-inbox : Signal.Mailbox Action
-inbox =
-  Signal.mailbox NoOp
+inputBox : Signal.Mailbox Action
+inputBox =
+  Signal.mailbox (Check "0")
+
+
+clickBox : Signal.Mailbox String
+clickBox =
+  Signal.mailbox "click"
 
 
 actions : Signal Action
 actions =
-  inbox.signal
+  Signal.sampleOn clickBox.signal inputBox.signal
 
 
-
-answer : Signal.Mailbox String
-answer =
-  Signal.mailbox ""
-
-answerS : Signal String
-answerS =
-  answer.signal
-
-combined =
-  Signal.mergeMany
-    [ actions
-    , Signal.map (\ans -> Answer ans) answerS
-    ]
 
 
 --PORTS
