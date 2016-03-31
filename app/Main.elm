@@ -3,7 +3,7 @@ module Main where
 import Html exposing(..)
 import Html.Events exposing (onClick, targetValue, on)
 import Random.PCG as Rand
-import Time
+import Time exposing (..)
 
 
 --MODEL
@@ -20,7 +20,7 @@ initialModel : Model
 initialModel =
   { numA = 0
   , numB = 0
-  , operator = "*"
+  , operator = "x"
   }
   --let
   --  emptyModel =
@@ -112,7 +112,7 @@ actions =
 
 model : Signal Model
 model =
-  Signal.foldp update initialModel (Time.timestamp actions)
+  Signal.foldp update initialModel (timestamp actions)
 
 
 main : Signal Html
