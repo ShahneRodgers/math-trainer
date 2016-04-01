@@ -5,7 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, targetValue, on)
 import Random.PCG as Rand
 import Time exposing (..)
-
+import Keyboard
 
 
 --MODEL
@@ -78,7 +78,7 @@ view model =
           , on "input" targetValue (\str -> Signal.message inputBox.address (Check str)) ]
           [ ]
         , button
-          [ onClick clickBox.address "click"]
+          [ onClick clickBox.address True ]
           [ text "Submit" ]
         ]
       ]
@@ -92,14 +92,19 @@ inputBox =
   Signal.mailbox (Check "0")
 
 
-clickBox : Signal.Mailbox String
+clickBox : Signal.Mailbox Bool
 clickBox =
-  Signal.mailbox "click"
+  Signal.mailbox True
 
+clicks : Signal Bool
+clicks =
+  Signal.merge
+    clickBox.signal
+    Keyboard.enter
 
 actions : Signal Action
 actions =
-  Signal.sampleOn clickBox.signal inputBox.signal
+  Signal.sampleOn clicks inputBox.signal
 
 
 
