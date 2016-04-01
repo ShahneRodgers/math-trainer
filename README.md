@@ -35,3 +35,6 @@ npm run dev
 ```
 
 and navigate your browser to http://localhost:8080
+
+# Working example
+[Math trainer](http://math-trainer.s3-website-ap-southeast-2.amazonaws.com/)
