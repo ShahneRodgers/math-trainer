@@ -68,19 +68,28 @@ view model =
     [ div
       [ class "row" ]
       [ div
-        [ class "row" ]
-        [ text (toString model.numA)
-        , text (model.operator)
-        , text (toString model.numB)
-        , text " = "
-        , input
-          [ value ""
-          , on "input" targetValue (\str -> Signal.message inputBox.address (Check str)) ]
-          [ ]
-        , button
-          [ onClick clickBox.address True ]
-          [ text "Submit" ]
-        ]
+        [ class "symbol" ]
+        [ text (toString model.numA) ]
+      , div
+        [ class "symbol" ]
+        [ text (model.operator) ]
+      , div
+        [ class "symbol" ]
+        [ text (toString model.numB) ]
+      , div
+        [ class "symbol" ]
+        [ text " = " ]
+      , input
+        [ class "symbol"
+        , value ""
+        , on "input" targetValue (\str -> Signal.message inputBox.address (Check str)) ]
+        [ ]
+      ]
+    , div
+      [ class "row" ]
+      [ button
+        [ onClick clickBox.address True]
+        [ text "Submit" ]
       ]
     ]
 
