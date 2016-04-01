@@ -1,0 +1,11 @@
+{
+  "name": "math-trainer",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "elm-live app/Main.elm --output=elm.js --open"
+  },
+  "devDependencies": {
+    "elm-live": "^2.0.4"
+  }
+}

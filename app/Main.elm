@@ -6,6 +6,7 @@ import Random.PCG as Rand
 import Time exposing (..)
 
 
+
 --MODEL
 
 type alias Model =
@@ -19,7 +20,7 @@ type alias Model =
 initialModel : Model
 initialModel =
   { numA = 0
-  , numB = 0
+  , numB =
   , operator = "x"
   }
   --let
@@ -61,9 +62,12 @@ generator =
 
 view : Model -> Html
 view model =
-  div []
+  div
+    [ class "container" ]
     [ div
-        []
+      [ class "row" ]
+      [ div
+        [ class "row" ]
         [ text (toString model.numA)
         , text (model.operator)
         , text (toString model.numB)
@@ -115,9 +119,16 @@ model =
   Signal.foldp update initialModel (timestamp actions)
 
 
+
 main : Signal Html
 main =
   Signal.map view model
+
+
+
+
+
+
 
 
 
