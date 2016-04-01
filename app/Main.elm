@@ -1,6 +1,7 @@
 module Main where
 
-import Html exposing(..)
+import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, targetValue, on)
 import Random.PCG as Rand
 import Time exposing (..)
@@ -20,7 +21,7 @@ type alias Model =
 initialModel : Model
 initialModel =
   { numA = 0
-  , numB =
+  , numB = 0
   , operator = "x"
   }
   --let
@@ -79,6 +80,7 @@ view model =
           [ onClick clickBox.address "click"]
           [ text "Submit" ]
         ]
+      ]
     ]
 
 
