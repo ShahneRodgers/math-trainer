@@ -74,7 +74,8 @@ view model =
         , text (toString model.numB)
         , text " = "
         , input
-          [ on "input" targetValue (\str -> Signal.message inputBox.address (Check str)) ]
+          [ value ""
+          , on "input" targetValue (\str -> Signal.message inputBox.address (Check str)) ]
           [ ]
         , button
           [ onClick clickBox.address "click"]
