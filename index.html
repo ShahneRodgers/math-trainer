@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
   </head>
   <body>
-    <script type="text/javascript">Elm.fullscreen(Elm.Main)</script>
+    <div id="elm" class="elm">
+    <script>
+     var elmDiv = document.getElementById("elm")
+     Elm.embed(Elm.Main, elmDiv)
+    </script>
   </body>
 </html>
