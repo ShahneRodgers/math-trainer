@@ -6,6 +6,9 @@ import Html.Events exposing (onClick, targetValue, on)
 import Random.PCG as Rand
 import Time exposing (..)
 import Keyboard
+import Color exposing (white, red, green)
+import Window
+import Score exposing (..)
 
 
 --MODEL
@@ -14,6 +17,7 @@ type alias Model =
   { numA: Int
   , numB: Int
   , operator: String
+  , score : Score
   }
 
 
@@ -23,6 +27,7 @@ initialModel =
   { numA = 0
   , numB = 0
   , operator = "x"
+  , score = initScore
   }
   --let
   --  emptyModel =
@@ -49,9 +54,13 @@ update (time, action) model =
         if (toString answerC) == answerU then --to integer
           { model | numA = num1
                   , numB = num2
+                  , score = (updateScore model.score True time)
           }
         else
-          model
+          { model | numA = model.numA
+                  , numB = model.numB
+                  , score = (updateScore model.score False time)
+          }
 
 
 generator : Rand.Generator Int
@@ -61,13 +70,14 @@ generator =
 
 --VIEW
 
-view : Model -> Html
-view model =
+view : Model -> (Int, Int) -> Html
+view model (width, height) =
   div
     [ class "container" ]
     [ div
       [ class "row" ]
-      [ div
+      [ (displayScore model.score (width, height))
+      , div
         [ class "symbol" ]
         [ text (toString model.numA) ]
       , div
@@ -139,7 +149,7 @@ model =
 
 main : Signal Html
 main =
-  Signal.map view model
+  Signal.map2 view model Window.dimensions
 
 
 
