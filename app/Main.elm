@@ -1,4 +1,4 @@
-module Main where
+module Main (..) where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -13,13 +13,13 @@ import Score exposing (..)
 
 --MODEL
 
+
 type alias Model =
-  { numA: Int
-  , numB: Int
-  , operator: String
+  { numA : Int
+  , numB : Int
+  , operator : String
   , score : Score
   }
-
 
 
 initialModel : Model
@@ -29,82 +29,100 @@ initialModel =
   , operator = "x"
   , score = initScore
   }
-  --let
-  --  emptyModel =
-  --    { score = 0 }
-  --in
-  --  Maybe.withDefault emptyModel incoming
 
 
+
+--let
+--  emptyModel =
+--    { score = 0 }
+--in
+--  Maybe.withDefault emptyModel incoming
 --UPDATE
 
-type Action = Check String
 
-update : (Float, Action) -> Model -> Model
-update (time, action) model =
+type Action
+  = Check String
+
+
+update : ( Float, Action ) -> Model -> Model
+update ( time, action ) model =
   case action of
     Check answerU ->
       let
-        seedM = Rand.initialSeed2 (round time) 12345
-        (num1, seed1) = Rand.generate generator seedM
-        (num2, seed2) = Rand.generate generator seed1
+        seedM =
+          Rand.initialSeed2 (round time) 12345
 
-        answerC = model.numA * model.numB
+        ( num1, seed1 ) =
+          Rand.generate generator seedM
+
+        ( num2, seed2 ) =
+          Rand.generate generator seed1
+
+        answerC =
+          model.numA * model.numB
       in
-        if (toString answerC) == answerU then --to integer
-          { model | numA = num1
-                  , numB = num2
-                  , score = (updateScore model.score True time)
+        if (toString answerC) == answerU then
+          --to integer
+          { model
+            | numA = num1
+            , numB = num2
+            , score = (updateScore model.score True time)
           }
         else
-          { model | numA = model.numA
-                  , numB = model.numB
-                  , score = (updateScore model.score False time)
+          { model
+            | numA = model.numA
+            , numB = model.numB
+            , score = (updateScore model.score False time)
           }
 
 
 generator : Rand.Generator Int
 generator =
-    Rand.int 1 10
+  Rand.int 1 10
+
 
 
 --VIEW
 
-view : Model -> (Int, Int) -> Html
-view model (width, height) =
+
+view : Model -> ( Int, Int ) -> Html
+view model ( width, height ) =
   div
     [ class "container" ]
     [ div
-      [ class "row" ]
-      [ (displayScore model.score (width, height))
-      , div
-        [ class "symbol" ]
-        [ text (toString model.numA) ]
-      , div
-        [ class "symbol" ]
-        [ text (model.operator) ]
-      , div
-        [ class "symbol" ]
-        [ text (toString model.numB) ]
-      , div
-        [ class "symbol" ]
-        [ text " = " ]
-      , input
-        [ class "symbol"
-        , value ""
-        , on "input" targetValue (\str -> Signal.message inputBox.address (Check str)) ]
-        [ ]
-      ]
+        [ class "row" ]
+        [ (displayScore model.score ( width, height ))
+        , div
+            [ class "symbol" ]
+            [ text (toString model.numA) ]
+        , div
+            [ class "symbol" ]
+            [ text (model.operator) ]
+        , div
+            [ class "symbol" ]
+            [ text (toString model.numB) ]
+        , div
+            [ class "symbol" ]
+            [ text " = " ]
+        , input
+            [ class "symbol"
+            , value ""
+            , on "input" targetValue (\str -> Signal.message inputBox.address (Check str))
+            ]
+            []
+        ]
     , div
-      [ class "row" ]
-      [ button
-        [ onClick clickBox.address True]
-        [ text "Submit" ]
-      ]
+        [ class "row" ]
+        [ button
+            [ onClick clickBox.address True ]
+            [ text "Submit" ]
+        ]
     ]
 
 
+
 --SIGNALS
+
 
 inputBox : Signal.Mailbox Action
 inputBox =
@@ -115,11 +133,13 @@ clickBox : Signal.Mailbox Bool
 clickBox =
   Signal.mailbox True
 
+
 clicks : Signal Bool
 clicks =
   Signal.merge
     clickBox.signal
     Keyboard.enter
+
 
 actions : Signal Action
 actions =
@@ -127,39 +147,20 @@ actions =
 
 
 
-
 --PORTS
-
 -- there is a bug with incoming data. need to be fixed.
-
 --port incoming : Maybe Model
-
 --port outgoing : Signal Model
 --port outgoing =
 --  model
-
-
 --WIRING
+
 
 model : Signal Model
 model =
   Signal.foldp update initialModel (timestamp actions)
 
 
-
 main : Signal Html
 main =
   Signal.map2 view model Window.dimensions
-
-
-
-
-
-
-
-
-
-
-
-
-
